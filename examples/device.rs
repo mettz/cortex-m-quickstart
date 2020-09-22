@@ -31,7 +31,7 @@ use panic_halt as _;
 use cortex_m::peripheral::syst::SystClkSource;
 use cortex_m_rt::entry;
 use cortex_m_semihosting::hprint;
-use stm32f3::stm32f303::{interrupt, Interrupt, NVIC};
+use stm32g0::stm32g030::{interrupt, Interrupt, NVIC};
 
 #[entry]
 fn main() -> ! {
