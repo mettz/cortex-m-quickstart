@@ -31,16 +31,15 @@ use panic_halt as _;
 use cortex_m::peripheral::syst::SystClkSource;
 use cortex_m_rt::entry;
 use cortex_m_semihosting::hprint;
-use stm32g0::stm32g030::{interrupt, Interrupt, NVIC};
+use stm32g0xx_hal::stm32g0::stm32g030::{interrupt, Interrupt, NVIC};
 
 #[entry]
 fn main() -> ! {
     let p = cortex_m::Peripherals::take().unwrap();
 
     let mut syst = p.SYST;
-    let mut nvic = p.NVIC;
 
-    nvic.enable(Interrupt::EXTI0);
+    unsafe { NVIC::unmask(Interrupt::EXTI0_1) }
 
     // configure the system timer to wrap around every second
     syst.set_clock_source(SystClkSource::Core);
@@ -52,11 +51,11 @@ fn main() -> ! {
         while !syst.has_wrapped() {}
 
         // trigger the `EXTI0` interrupt
-        NVIC::pend(Interrupt::EXTI0);
+        NVIC::pend(Interrupt::EXTI0_1);
     }
 }
 
 #[interrupt]
-fn EXTI0() {
+fn EXTI0_1() {
     hprint!(".").unwrap();
 }
